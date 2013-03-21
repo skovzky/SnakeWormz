@@ -13,3 +13,7 @@
                                    -30 0
                                    (circle 10 "solid" "navy"))))
 (define BODY (circle (/ SCALE 2) "solid" "purple"))
+
+;le objects
+(define FOOD (circle (/ SCALE 2) "solid" "forestgreen"))
+(define BACKGROUND (empty-scene (* 10 SCALE) (* 10 HEIGHT) "brown"))
