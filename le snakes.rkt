@@ -2,12 +2,12 @@
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-intermediate-reader.ss" "lang")((modname |le snakes|) (read-case-sensitive #t) (teachpacks ((lib "image.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp")))))
 ;le physical constants
-(define HEIGHT 19)
-(define SCALE 30)
+(define HEIGHT 60)
+(define SCALE 60)
 
 ;le SNAKE
 ;the head of the snake
-(define HEAD (circle (/ SCALE 2) "solid" "orange"))
+(define HEAD (circle (/ SCALE 3) "solid" "orange"))
 ;an alternate head I might use
 (define HEADalt 
   (underlay/offset (circle 40 "solid" "gray")
@@ -28,9 +28,16 @@
 ;image to be placed into a window
 (define (world-render gs)
   (let*([pos (game-pos gs)]
-        [x (posn-x pos)]
-        [y (posn-y pos)])
-    (place-image
+        [x (* SCALE(posn-x pos))]
+        [y (* SCALE (posn-y pos))])
+    (place-image HEAD
+               x y
+               BACKGROUND)))
+     
+;(define (world-render s)
+ ; (place-image HEAD
+  ;             (posn-x (game-pos s)) (posn-y (game-pos s))
+   ;            BACKGROUND))
 ;movement
 ;data definitions
 ;direction is current direction of travel for the worm, and is eiter
@@ -38,7 +45,11 @@
      ; 1  right
      ; 2  down
      ; 3  left
+     
+     
 (define-struct game (pos dir))
+(define initial-game (make-game (make-posn 0 0) 1))
+
 ;pos=posn of worm
 ;dir=direction of travel
 ;Game -> Game
@@ -71,8 +82,8 @@
 
 
 ;CREATE LE UNIVERSE
-(big-bang GAME
-          (on-tick move)
+(big-bang initial-game
+          (on-tick move 0.2)
           (on-key command)
           (to-draw world-render)
           )
