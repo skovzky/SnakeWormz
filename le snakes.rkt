@@ -48,7 +48,7 @@
      
      
 (define-struct game (pos dir))
-(define initial-game (make-game (make-posn 0 0) 1))
+(define initial-game (make-game (make-posn 5 5) 2))
 
 ;pos=posn of worm
 ;dir=direction of travel
@@ -70,7 +70,8 @@
     [(key=? key "up") (make-game pos 0)]
     [(key=? key "right") (make-game pos 1)]
     [(key=? key "down") (make-game pos 2)]
-    [(key=? key "left") (make-game pos 3)])))
+    [(key=? key "left") (make-game pos 3)]
+    [else gs])))
 
 ;worm-ness (making the body be a body that follows)
 
@@ -83,7 +84,6 @@
 
 ;CREATE LE UNIVERSE
 (big-bang initial-game
-          (on-tick move 0.2)
           (on-key command)
           (to-draw world-render)
-          )
+          (on-tick move 0.2))
