@@ -67,11 +67,26 @@
 (define (command gs key)
   (let*([pos(game-pos gs)])
   (cond
-    [(key=? key "up") (make-game pos 0)]
-    [(key=? key "right") (make-game pos 1)]
-    [(key=? key "down") (make-game pos 2)]
-    [(key=? key "left") (make-game pos 3)]
+    [(key=? key "w") (make-game pos 0)]
+    [(key=? key "d") (make-game pos 1)]
+    [(key=? key "s") (make-game pos 2)]
+    [(key=? key "a") (make-game pos 3)]
     [else gs])))
+
+;Wall Hit
+;dont hit the wall n00b
+;game-state -> game-state
+(defie (collision gs)
+  (let* ([pos(game-pos gs)]
+          [dir  (game-dir gs)]
+          [x (posn-x pos)]
+          [y (posn-y pos)])
+    (cond
+      [(if (>= y 0)) true]
+      [(if (<= x 0)) true]
+      [(if (>= x SCALE)) true]
+      [(if (<= y HEIGHT)) true])))
+
 
 ;worm-ness (making the body be a body that follows)
 
@@ -87,3 +102,4 @@
           (on-key command)
           (to-draw world-render)
           (on-tick move 0.2))
+          ;(stop-when collision))
