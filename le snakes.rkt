@@ -5,6 +5,7 @@
 (define HEIGHT 60)
 (define SCALE 60)
 (define GRID-SIZE 10)
+
 ;le SNAKE
 ;the head of the snake
 (define HEAD (circle (/ SCALE 3) "solid" "orange"))
@@ -15,6 +16,7 @@
                    (underlay/offset (circle 10 "solid" "forestgreen")
                                    -30 0
                                    (circle 10 "solid" "forestgreen"))))
+
 ;the body circles
 (define BODY (circle (/ SCALE 2) "solid" "purple"))
 
@@ -34,10 +36,7 @@
                x y
                BACKGROUND)))
      
-;(define (world-render s)
- ; (place-image HEAD
-  ;             (posn-x (game-pos s)) (posn-y (game-pos s))
-   ;            BACKGROUND))
+
 ;movement
 ;data definitions
 ;direction is current direction of travel for the worm, and is eiter
@@ -47,8 +46,8 @@
      ; 3  left
      
      
-(define-struct game (pos dir))
-(define initial-game (make-game (make-posn 5 5) 2))
+(define-struct game (pos dir body food))
+(define initial-game (make-game (make-posn 5 5) 2 empty (make-posn 7 5)))
 
 ;pos=posn of worm
 ;dir=direction of travel
@@ -56,21 +55,25 @@
 (define (move gs)
   (let*([pos(game-pos gs)]
           [dir  (game-dir gs)]
+          [body (game-body gs)]
+          [food (game-food gs)]
           [x (posn-x pos)]
           [y (posn-y pos)])
-    (cond [(= dir 0) (make-game (make-posn x (- y 1)) dir)]
-          [(= dir 1) (make-game (make-posn (+ x 1) y) dir)]
-          [(= dir 2) (make-game (make-posn x (+ y 1)) dir)]
-          [(= dir 3) (make-game (make-posn (- x 1) y) dir)])))
+    (cond [(= dir 0) (make-game (make-posn x (- y 1)) dir body food)]
+          [(= dir 1) (make-game (make-posn (+ x 1) y) dir body food)]
+          [(= dir 2) (make-game (make-posn x (+ y 1)) dir body food)]
+          [(= dir 3) (make-game (make-posn (- x 1) y) dir body food)])))
 
 ;Game Keypress -> Game
 (define (command gs key)
-  (let*([pos(game-pos gs)])
+  (let*([pos(game-pos gs)]
+        [body (game-body gs)]
+        [food (game-food gs)])
   (cond
-    [(key=? key "w") (make-game pos 0)]
-    [(key=? key "d") (make-game pos 1)]
-    [(key=? key "s") (make-game pos 2)]
-    [(key=? key "a") (make-game pos 3)]
+    [(key=? key "w") (make-game pos 0 body food)]
+    [(key=? key "d") (make-game pos 1 body food)]
+    [(key=? key "s") (make-game pos 2 body food)]
+    [(key=? key "a") (make-game pos 3 body food)]
     [else gs])))
 
 ;Wall Hit
