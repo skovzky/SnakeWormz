@@ -4,7 +4,7 @@
 ;le physical constants
 (define HEIGHT 60)
 (define SCALE 60)
-
+(define GRID-SIZE 10)
 ;le SNAKE
 ;the head of the snake
 (define HEAD (circle (/ SCALE 3) "solid" "orange"))
@@ -20,7 +20,7 @@
 
 ;le objects
 (define FOOD (circle (/ SCALE 2) "solid" "forestgreen"))
-(define BACKGROUND (empty-scene (* 10 SCALE) (* 10 HEIGHT) "brown"))
+(define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "brown"))
 
 
 ;World
@@ -76,16 +76,16 @@
 ;Wall Hit
 ;dont hit the wall n00b
 ;game-state -> game-state
-(defie (collision gs)
+(define (collision gs)
   (let* ([pos(game-pos gs)]
           [dir  (game-dir gs)]
           [x (posn-x pos)]
           [y (posn-y pos)])
-    (cond
-      [(if (>= y 0)) true]
-      [(if (<= x 0)) true]
-      [(if (>= x SCALE)) true]
-      [(if (<= y HEIGHT)) true])))
+    (or
+      (<= y 0)
+      (<= x 0)
+      (>= x GRID-SIZE)
+      (>= y GRID-SIZE))))
 
 
 ;worm-ness (making the body be a body that follows)
@@ -101,5 +101,5 @@
 (big-bang initial-game
           (on-key command)
           (to-draw world-render)
-          (on-tick move 0.2))
-          ;(stop-when collision))
+          (on-tick move 0.2)
+          (stop-when collision))
