@@ -4,7 +4,7 @@
 ;le physical constants
 (define HEIGHT 60)
 (define SCALE 60)
-(define GRID-SIZE 10)
+(define GRID-SIZE 13)
 
 ;le SNAKE
 ;the head of the snake
@@ -90,9 +90,15 @@
       (>= x GRID-SIZE)
       (>= y GRID-SIZE))))
 
+;END SCREEN
+
 
 ;worm-ness (making the body be a body that follows)
-
+;gs+list -> gs
+;make a list of
+     ;how many heads
+     ;posn's
+(define (body-list l gs)
 
 
 
