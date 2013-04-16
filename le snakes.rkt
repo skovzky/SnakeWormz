@@ -22,8 +22,13 @@
 
 ;le objects
 (define FOOD (circle (/ SCALE 2) "solid" "forestgreen"))
-(define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "brown"))
+(define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "black"))
 
+
+(define Lose_Screen
+  (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "red"))
+(define Lose
+  (text "YOU. ARE. TERRIBLE!" 48 "white"))
 
 ;World
 ;game-state --> image
@@ -91,14 +96,15 @@
       (>= y GRID-SIZE))))
 
 ;END SCREEN
-
+(define (END_SCREEN gs)
+         (place-image Lose 400 400 Lose_Screen))
 
 ;worm-ness (making the body be a body that follows)
 ;gs+list -> gs
 ;make a list of
      ;how many heads
      ;posn's
-(define (body-list l gs)
+;(define (body-list l gs)
 
 
 
@@ -111,4 +117,4 @@
           (on-key command)
           (to-draw world-render)
           (on-tick move 0.2)
-          (stop-when collision))
+          (stop-when collision END_SCREEN))
