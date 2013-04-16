@@ -6,10 +6,10 @@
 (define SCALE 60)
 (define GRID-SIZE 13)
 
-;le SNAKE
-;the head of the snake
+     ;le SNAKE
+     ;the head of the snake
 (define HEAD (circle (/ SCALE 3) "solid" "orange"))
-;an alternate head I might use
+     ;an alternate head I might use
 (define HEADalt 
   (underlay/offset (circle 40 "solid" "gray")
                    0 -10
@@ -17,10 +17,10 @@
                                    -30 0
                                    (circle 10 "solid" "forestgreen"))))
 
-;the body circles
+     ;the body circles
 (define BODY (circle (/ SCALE 2) "solid" "purple"))
 
-;le objects
+     ;le objects
 (define FOOD (circle (/ SCALE 2) "solid" "forestgreen"))
 (define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "black"))
 
@@ -31,8 +31,8 @@
   (text "YOU. ARE. TERRIBLE!" 48 "white"))
 
 ;World
-;game-state --> image
-;image to be placed into a window
+     ;game-state --> image
+     ;image to be placed into a window
 (define (world-render gs)
   (let*([pos (game-pos gs)]
         [x (* SCALE(posn-x pos))]
@@ -43,20 +43,19 @@
      
 
 ;movement
-;data definitions
-;direction is current direction of travel for the worm, and is eiter
-     ; 0  up
-     ; 1  right
-     ; 2  down
-     ; 3  left
-     
-     
+     ;data definitions
+     ;direction is current direction of travel for the worm, and is eiter
+          ; 0  up
+          ; 1  right
+          ; 2  down
+          ; 3  left
 (define-struct game (pos dir body food))
 (define initial-game (make-game (make-posn 5 5) 2 empty (make-posn 7 5)))
 
-;pos=posn of worm
-;dir=direction of travel
-;Game -> Game
+
+     ;pos=posn of worm
+     ;dir=direction of travel
+     ;Game -> Game
 (define (move gs)
   (let*([pos(game-pos gs)]
           [dir  (game-dir gs)]
@@ -69,7 +68,9 @@
           [(= dir 2) (make-game (make-posn x (+ y 1)) dir body food)]
           [(= dir 3) (make-game (make-posn (- x 1) y) dir body food)])))
 
-;Game Keypress -> Game
+
+
+     ;Game Keypress -> Game
 (define (command gs key)
   (let*([pos(game-pos gs)]
         [body (game-body gs)]
@@ -81,9 +82,11 @@
     [(key=? key "a") (make-game pos 3 body food)]
     [else gs])))
 
+
+
 ;Wall Hit
-;dont hit the wall n00b
-;game-state -> game-state
+     ;dont hit the wall n00b
+     ;game-state -> game-state
 (define (collision gs)
   (let* ([pos(game-pos gs)]
           [dir  (game-dir gs)]
@@ -95,20 +98,24 @@
       (>= x GRID-SIZE)
       (>= y GRID-SIZE))))
 
+
+
 ;END SCREEN
 (define (END_SCREEN gs)
          (place-image Lose 400 400 Lose_Screen))
 
+
+
 ;worm-ness (making the body be a body that follows)
-;gs+list -> gs
-;make a list of
-     ;how many heads
-     ;posn's
-;(define (body-list l gs)
+     ;gs+list -> gs
+     ;make a list of
+          ;how many heads
+          ;posn's
+     ;(define (body-list l gs)
 
 
 
-;food placement
+     ;food placement
 
 
 
