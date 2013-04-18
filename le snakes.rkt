@@ -107,11 +107,21 @@
 
 
 ;worm-ness (making the body be a body that follows)
-     ;gs+list -> gs
+     ;gs list -> gs
      ;make a list of
           ;how many heads
           ;posn's
-     ;(define (body-list l gs)
+
+(define WORM_BODY empty)
+
+     (define (body-list l gs)
+       (let*([pos(game-pos gs)]
+          [dir  (game-dir gs)]
+          [body (game-body gs)]
+          [food (game-food gs)]
+          [x (posn-x pos)]
+          [y (posn-y pos)])
+         (cond empty
 
 
 
