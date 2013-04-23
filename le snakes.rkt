@@ -50,7 +50,7 @@
           ; 2  down
           ; 3  left
 (define-struct game (pos dir body food))
-(define initial-game (make-game (make-posn 5 5) 2 empty (make-posn 7 5)))
+(define initial-game (make-game (make-posn 5 5) 2 (list (make-posn 5 4)) (make-posn 7 5)))
 
 
      ;pos=posn of worm
@@ -112,20 +112,32 @@
           ;how many heads
           ;posn's
 
-(define WORM_BODY empty)
+(define (all_but_the_last_tail lst)
+  (reverse (rest (reverse lst))))
 
-     (define (body-list l gs)
+(define (body-list l gs)
        (let*([pos(game-pos gs)]
           [dir  (game-dir gs)]
           [body (game-body gs)]
           [food (game-food gs)]
           [x (posn-x pos)]
-          [y (posn-y pos)])
-         (cond empty
-
-
-
+          [y (posn-y pos)]
+          [new_pos (cond 
+               [(= dir 0) (make-game (make-posn x (- y 1)) dir body food)]
+               [(= dir 1) (make-game (make-posn (+ x 1) y) dir body food)]
+               [(= dir 2) (make-game (make-posn x (+ y 1)) dir body food)]
+               [(= dir 3) (make-game (make-posn (- x 1) y) dir body food)])]
+          [new_tail (if (empty? body)
+                        empty
+                        (cons pos (all_but_the_last_tail)))])
+          (make-game new_pos new_tail dir body food)))
+     
+;Recursively rendering tail
      ;food placement
+     ;takes the list of worm body and renders it onto screen
+     (define (MOVE_WORM lst)
+       (place-image BODY)
+
 
 
 
