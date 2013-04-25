@@ -1,6 +1,10 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-intermediate-reader.ss" "lang")((modname |le snakes|) (read-case-sensitive #t) (teachpacks ((lib "image.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp")))))
+;====ROBERT HEEMANN====
+  ;----SNAKE GAME----
+
+
 ;le physical constants
 (define HEIGHT 60)
 (define SCALE 60)
@@ -36,10 +40,11 @@
 (define (world-render gs)
   (let*([pos (game-pos gs)]
         [x (* SCALE(posn-x pos))]
-        [y (* SCALE (posn-y pos))])
-    (place-image HEAD
+        [y (* SCALE (posn-y pos))]
+        [BODY (game-body gs)])
+    (RENDER_WORM BODY (place-image HEAD
                x y
-               BACKGROUND)))
+               BACKGROUND))))
      
 
 ;movement
@@ -135,9 +140,18 @@
 ;Recursively rendering tail
      ;food placement
      ;takes the list of worm body and renders it onto screen
-     (define (MOVE_WORM lst)
-       (place-image BODY)
 
+(define worm-cons (list (make-posn 5 6)))
+
+(define (place-segment pos img)
+  (let* ([x (posn-x pos)]
+        [y (posn-y pos)])
+          (place-image BODY x y img)))
+          
+(define (RENDER_WORM lst img)
+       (cond
+         [(empty? lst) img]
+         [else (place-segment (first lst) (RENDER_WORM (rest lst) img))]))
 
 
 
