@@ -5,7 +5,7 @@
   ;----SNAKE GAME----
 
 
-;le physical constants
+;le physical constants==================================================================================================================================================================================================================
 (define HEIGHT 60)
 (define SCALE 60)
 (define GRID-SIZE 13)
@@ -34,7 +34,7 @@
 (define Lose
   (text "YOU. ARE. TERRIBLE!" 48 "white"))
 
-;World
+;World==================================================================================================================================================================================================================
      ;game-state --> image
      ;image to be placed into a window
 (define (world-render gs)
@@ -47,7 +47,7 @@
                BACKGROUND))))
      
 
-;movement
+;movement==================================================================================================================================================================================================================
      ;data definitions
      ;direction is current direction of travel for the worm, and is eiter
           ; 0  up
@@ -58,7 +58,7 @@
 (define initial-game (make-game (make-posn 5 5) 2 (list (make-posn 5 4)) (make-posn 7 5)))
 
 
-     ;pos=posn of worm
+     ;pos=posn of worm=============================================================================
      ;dir=direction of travel
      ;Game -> Game
 (define (move gs)
@@ -75,7 +75,7 @@
 
 
 
-     ;Game Keypress -> Game
+     ;Game Keypress -> Game=============================================================================
 (define (command gs key)
   (let*([pos(game-pos gs)]
         [body (game-body gs)]
@@ -89,7 +89,7 @@
 
 
 
-;Wall Hit
+;Wall Hit==================================================================================================================================================================================================================
      ;dont hit the wall n00b
      ;game-state -> game-state
 (define (collision gs)
@@ -105,13 +105,12 @@
 
 
 
-;END SCREEN
+;END SCREEN==================================================================================================================================================================================================================
 (define (END_SCREEN gs)
          (place-image Lose 400 400 Lose_Screen))
 
 
-
-;worm-ness (making the body be a body that follows)
+;worm-ness (making the body be a body that follows)==================================================================================================================================================================================================================
      ;gs list -> gs
      ;make a list of
           ;how many heads
@@ -137,7 +136,7 @@
                         (cons pos (all_but_the_last_tail)))])
           (make-game new_pos new_tail dir body food)))
      
-;Recursively rendering tail
+;Recursively rendering tail=============================================================================
      ;food placement
      ;takes the list of worm body and renders it onto screen
 
@@ -155,9 +154,11 @@
 
 
 
-;CREATE LE UNIVERSE
+;CREATE LE UNIVERSE==================================================================================================================================================================================================================
 (big-bang initial-game
           (on-key command)
           (to-draw world-render)
           (on-tick move 0.2)
           (stop-when collision END_SCREEN))
+
+
