@@ -22,10 +22,10 @@
                                    (circle 10 "solid" "forestgreen"))))
 
      ;the body circles
-(define BODY (circle (/ SCALE 2) "solid" "purple"))
+(define BODY (circle (/ SCALE 3) "solid" "purple"))
 
      ;le objects
-(define FOOD (circle (/ SCALE 2) "solid" "forestgreen"))
+(define FOOD (circle (/ SCALE 3) "solid" "forestgreen"))
 (define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "black"))
 
 
@@ -68,10 +68,10 @@
           [food (game-food gs)]
           [x (posn-x pos)]
           [y (posn-y pos)])
-    (cond [(= dir 0) (make-game (make-posn x (- y 1)) dir body food)]
-          [(= dir 1) (make-game (make-posn (+ x 1) y) dir body food)]
-          [(= dir 2) (make-game (make-posn x (+ y 1)) dir body food)]
-          [(= dir 3) (make-game (make-posn (- x 1) y) dir body food)])))
+    (cond [(= dir 0) (make-game (make-posn x (- y 1)) dir (cons pos body) food)]
+          [(= dir 1) (make-game (make-posn (+ x 1) y) dir (cons pos body) food)]
+          [(= dir 2) (make-game (make-posn x (+ y 1)) dir (cons pos body) food)]
+          [(= dir 3) (make-game (make-posn (- x 1) y) dir (cons pos body) food)])))
 
 
 
@@ -143,8 +143,8 @@
 (define worm-cons (list (make-posn 5 6)))
 
 (define (place-segment pos img)
-  (let* ([x (posn-x pos)]
-        [y (posn-y pos)])
+  (let* ([x (* SCALE (posn-x pos))]
+        [y (* SCALE (posn-y pos))])
           (place-image BODY x y img)))
           
 (define (RENDER_WORM lst img)
