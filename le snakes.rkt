@@ -7,8 +7,8 @@
 
 ;le physical constants==================================================================================================================================================================================================================
 (define HEIGHT 60)
-(define SCALE 60)
-(define GRID-SIZE 13)
+(define SCALE 15)
+(define GRID-SIZE 52)
 
      ;le SNAKE
      ;the head of the snake
@@ -26,11 +26,11 @@
 
      ;le objects
 (define FOOD (circle (/ SCALE 3) "solid" "forestgreen"))
-(define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "black"))
+(define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE SCALE) "black"))
 
 
 (define Lose_Screen
-  (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE HEIGHT) "red"))
+  (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE SCALE) "red"))
 (define Lose
   (text "YOU. ARE. TERRIBLE!" 48 "white"))
 
@@ -55,7 +55,10 @@
           ; 2  down
           ; 3  left
 (define-struct game (pos dir body food))
-(define initial-game (make-game (make-posn 5 5) 2 (list (make-posn 5 4)) (make-posn 7 5)))
+
+(define INITIAL_BODY_LIST (list (make-posn 5 4) (make-posn 5 3) (make-posn 5 2) (make-posn 5 1)))
+
+(define initial-game (make-game (make-posn 5 5) 2 INITIAL_BODY_LIST (make-posn 7 5)))
 
 
      ;pos=posn of worm=============================================================================
@@ -68,10 +71,10 @@
           [food (game-food gs)]
           [x (posn-x pos)]
           [y (posn-y pos)])
-    (cond [(= dir 0) (make-game (make-posn x (- y 1)) dir (cons pos body) food)]
-          [(= dir 1) (make-game (make-posn (+ x 1) y) dir (cons pos body) food)]
-          [(= dir 2) (make-game (make-posn x (+ y 1)) dir (cons pos body) food)]
-          [(= dir 3) (make-game (make-posn (- x 1) y) dir (cons pos body) food)])))
+    (cond [(= dir 0) (make-game (make-posn x (- y 1)) dir (cons pos (all_but_the_last_tail body)) food)]
+          [(= dir 1) (make-game (make-posn (+ x 1) y) dir (cons pos (all_but_the_last_tail body)) food)]
+          [(= dir 2) (make-game (make-posn x (+ y 1)) dir (cons pos (all_but_the_last_tail body)) food)]
+          [(= dir 3) (make-game (make-posn (- x 1) y) dir (cons pos (all_but_the_last_tail body)) food)])))
 
 
 
@@ -119,22 +122,22 @@
 (define (all_but_the_last_tail lst)
   (reverse (rest (reverse lst))))
 
-(define (body-list l gs)
-       (let*([pos(game-pos gs)]
-          [dir  (game-dir gs)]
-          [body (game-body gs)]
-          [food (game-food gs)]
-          [x (posn-x pos)]
-          [y (posn-y pos)]
-          [new_pos (cond 
-               [(= dir 0) (make-game (make-posn x (- y 1)) dir body food)]
-               [(= dir 1) (make-game (make-posn (+ x 1) y) dir body food)]
-               [(= dir 2) (make-game (make-posn x (+ y 1)) dir body food)]
-               [(= dir 3) (make-game (make-posn (- x 1) y) dir body food)])]
-          [new_tail (if (empty? body)
-                        empty
-                        (cons pos (all_but_the_last_tail)))])
-          (make-game new_pos new_tail dir body food)))
+;(define (body-list l gs)
+ ;      (let*([pos(game-pos gs)]
+  ;        [dir  (game-dir gs)]
+   ;       [body (game-body gs)]
+    ;      [food (game-food gs)]
+     ;     [x (posn-x pos)]
+      ;    [y (posn-y pos)]
+       ;   [new_pos (cond 
+        ;       [(= dir 0) (make-game (make-posn x (- y 1)) dir body food)]
+         ;      [(= dir 1) (make-game (make-posn (+ x 1) y) dir body food)]
+          ;     [(= dir 2) (make-game (make-posn x (+ y 1)) dir body food)]
+           ;    [(= dir 3) (make-game (make-posn (- x 1) y) dir body food)])]
+          ;[new_tail (if (empty? body)
+           ;             empty
+            ;            (cons pos (all_but_the_last_tail)))])
+          ;(make-game new_pos new_tail dir body food)))
      
 ;Recursively rendering tail=============================================================================
      ;food placement
@@ -158,7 +161,7 @@
 (big-bang initial-game
           (on-key command)
           (to-draw world-render)
-          (on-tick move 0.2)
+          (on-tick move 0.1)
           (stop-when collision END_SCREEN))
 
 
