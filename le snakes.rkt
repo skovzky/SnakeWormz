@@ -4,6 +4,11 @@
 ;====ROBERT HEEMANN====
   ;----SNAKE GAME----
 
+(define-struct game (pos dir body food))
+
+(define INITIAL_BODY_LIST (list (make-posn 5 4) (make-posn 5 3) (make-posn 5 2) (make-posn 5 1)))
+
+(define initial-game (make-game (make-posn 5 5) 2 INITIAL_BODY_LIST (make-posn 7 5)))
 
 ;le physical constants==================================================================================================================================================================================================================
 (define HEIGHT 60)
@@ -28,9 +33,13 @@
 (define FOOD (circle (/ SCALE 3) "solid" "forestgreen"))
 (define BACKGROUND (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE SCALE) "black"))
 
+     ;END SCREEN
+(define (END_SCREEN gs)
+         (place-image Lose 400 400 Lose_Screen))
 
 (define Lose_Screen
   (empty-scene (* GRID-SIZE SCALE) (* GRID-SIZE SCALE) "red"))
+
 (define Lose
   (text "YOU. ARE. TERRIBLE!" 48 "white"))
 
@@ -50,22 +59,20 @@
 ;movement==================================================================================================================================================================================================================
      ;data definitions
      ;direction is current direction of travel for the worm, and is eiter
+     ;pos=posn of worm=============================================================================
+     ;dir=direction of travel
+     ;Game -> Game
           ; 0  up
           ; 1  right
           ; 2  down
           ; 3  left
-(define-struct game (pos dir body food))
 
-(define INITIAL_BODY_LIST (list (make-posn 5 4) (make-posn 5 3) (make-posn 5 2) (make-posn 5 1)))
-
-(define initial-game (make-game (make-posn 5 5) 2 INITIAL_BODY_LIST (make-posn 7 5)))
+(define (all_but_the_last_tail lst)
+  (reverse (rest (reverse lst))))
 
 
-     ;pos=posn of worm=============================================================================
-     ;dir=direction of travel
-     ;Game -> Game
 (define (move gs)
-  (let*([pos(game-pos gs)]
+  (let*([pos (game-pos gs)]
           [dir  (game-dir gs)]
           [body (game-body gs)]
           [food (game-food gs)]
@@ -76,18 +83,28 @@
           [(= dir 2) (make-game (make-posn x (+ y 1)) dir (cons pos (all_but_the_last_tail body)) food)]
           [(= dir 3) (make-game (make-posn (- x 1) y) dir (cons pos (all_but_the_last_tail body)) food)])))
 
+;cant go back onto one's self...
+;(define (NO_RETREAT gs)
+ ; (let*([pos (game-pos gs)]
+  ;        [dir  (game-dir gs)]
+   ;       [body (game-body gs)]
+    ;      [food (game-food gs)]
+     ;     [x (posn-x pos)]
+      ;    [y (posn-y pos)])
+    ;(cond [(and (= dir 0) (key=? key "s")) 
 
 
      ;Game Keypress -> Game=============================================================================
 (define (command gs key)
   (let*([pos(game-pos gs)]
         [body (game-body gs)]
-        [food (game-food gs)])
+        [food (game-food gs)]
+        [dir  (game-dir gs)])
   (cond
-    [(key=? key "w") (make-game pos 0 body food)]
-    [(key=? key "d") (make-game pos 1 body food)]
-    [(key=? key "s") (make-game pos 2 body food)]
-    [(key=? key "a") (make-game pos 3 body food)]
+    [(and (key=? key "w")(not (= dir 2))) (make-game pos 0 body food)]
+    [(and (key=? key "d")(not (= dir 3))) (make-game pos 1 body food)]
+    [(and (key=? key "s")(not (= dir 0))) (make-game pos 2 body food)]
+    [(and (key=? key "a")(not (= dir 1))) (make-game pos 3 body food)]
     [else gs])))
 
 
@@ -108,19 +125,14 @@
 
 
 
-;END SCREEN==================================================================================================================================================================================================================
-(define (END_SCREEN gs)
-         (place-image Lose 400 400 Lose_Screen))
-
-
 ;worm-ness (making the body be a body that follows)==================================================================================================================================================================================================================
+;AKA CHERNOBL (everything has been scraped....)
      ;gs list -> gs
      ;make a list of
           ;how many heads
           ;posn's
 
-(define (all_but_the_last_tail lst)
-  (reverse (rest (reverse lst))))
+
 
 ;(define (body-list l gs)
  ;      (let*([pos(game-pos gs)]
@@ -161,7 +173,7 @@
 (big-bang initial-game
           (on-key command)
           (to-draw world-render)
-          (on-tick move 0.1)
+          (on-tick move 0.07)
           (stop-when collision END_SCREEN))
 
 
