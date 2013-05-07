@@ -6,7 +6,7 @@
 
 (define-struct game (pos dir body food))
 
-(define INITIAL_BODY_LIST (list (make-posn 5 4) (make-posn 5 3) (make-posn 5 2) (make-posn 5 1)))
+(define INITIAL_BODY_LIST (list (make-posn 5 4) (make-posn 5 3) (make-posn 5 2) ))
 
 (define initial-game (make-game (make-posn 5 5) 2 INITIAL_BODY_LIST (make-posn 7 5)))
 
@@ -53,7 +53,7 @@
         [BODY (game-body gs)])
     (RENDER_WORM BODY (place-image HEAD
                x y
-               BACKGROUND))))
+               (RENDER_FOOD BACKGROUND gs)))))
      
 
 ;movement==================================================================================================================================================================================================================
@@ -151,10 +151,17 @@
             ;            (cons pos (all_but_the_last_tail)))])
           ;(make-game new_pos new_tail dir body food)))
      
-;Recursively rendering tail=============================================================================
-     ;food placement
-     ;takes the list of worm body and renders it onto screen
+;Placing Down the Bread crumbs==================================================================================================================================================================================================================
+;GS->RENDER
+(define (RENDER_FOOD img gs)
+  (let* ([x (* SCALE (posn-x (game-food gs)))]
+         [y (* SCALE (posn-y (game-food gs)))])
+    (place-image FOOD x y img)))
 
+     ;food placement
+
+
+;RENDERING THE WORM==================================================================================================================================================================================================================
 (define worm-cons (list (make-posn 5 6)))
 
 (define (place-segment pos img)
