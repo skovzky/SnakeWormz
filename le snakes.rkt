@@ -8,7 +8,7 @@
 
 (define INITIAL_BODY_LIST (list (make-posn 5 4) (make-posn 5 3) (make-posn 5 2) ))
 
-(define FOOD_POSN (make-posn (+ 1 (random 52)) (+ 1 (random 52))))
+(define FOOD_POSN (make-posn (+ 2 (random 52)) (+ 2 (random 52))))
 
 (define initial-game (make-game (make-posn 5 5) 2 INITIAL_BODY_LIST FOOD_POSN))
 
@@ -92,7 +92,7 @@
                           [(= dir 1) (make-posn (+ x 1) y)]
                           [(= dir 2) (make-posn x (+ y 1))]
                           [(= dir 3) (make-posn (- x 1) y)])])
-      (if (EAT? food gs) (make-game new-posn dir (cons pos body) (make-posn (+ 1 (random 52)) (+ 1 (random 52))))
+      (if (EAT? food gs) (make-game new-posn dir (cons pos body) (make-posn (+ 2 (random 52)) (+ 2 (random 52))))
           (make-game new-posn dir (cons pos (all_but_the_last_tail body)) food))))
   
   
@@ -169,15 +169,7 @@
   
   
   
-  ;(define (food-create p)
-  ; (food-check-create p (make-posn (* SCALE (+ 1 (random MAX)))
-  ;                                (* SCALE (+ 1 (random MAX))))))
-  
-  ;(define (food-check-create p candidate)
-  ; (if (equal? p candidate) (food-create p) candidate))
-  
-  
-  
+
   ;RENDERING THE WORM==================================================================================================================================================================================================================
   (define worm-cons (list (make-posn 5 6)))
   
