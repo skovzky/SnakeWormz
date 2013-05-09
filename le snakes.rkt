@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-reader.ss" "lang")((modname |le snakes|) (read-case-sensitive #t) (teachpacks ((lib "image.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp")))))
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname |le snakes|) (read-case-sensitive #t) (teachpacks ((lib "image.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.ss" "teachpack" "2htdp") (lib "universe.ss" "teachpack" "2htdp") (lib "batch-io.ss" "teachpack" "2htdp")))))
 ;====ROBERT HEEMANN====
   ;----SNAKE GAME----
 
@@ -8,12 +8,21 @@
 
 (define INITIAL_BODY_LIST (list (make-posn 5 4) (make-posn 5 3) (make-posn 5 2) ))
 
-(define initial-game (make-game (make-posn 5 5) 2 INITIAL_BODY_LIST (make-posn 7 5)))
+(define FOOD_POSN (make-posn (random 60) (random 60)))
 
+(define initial-game (make-game (make-posn 5 5) 2 INITIAL_BODY_LIST FOOD_POSN))
+
+;Update the game in its entirety
+;gs->gs
+(define (UPDATE gs)
+  ((move)
+
+   
 ;le physical constants==================================================================================================================================================================================================================
 (define HEIGHT 60)
 (define SCALE 15)
 (define GRID-SIZE 52)
+(define MAX (- GRID-SIZE 1))
 
      ;le SNAKE
      ;the head of the snake
@@ -83,16 +92,6 @@
           [(= dir 2) (make-game (make-posn x (+ y 1)) dir (cons pos (all_but_the_last_tail body)) food)]
           [(= dir 3) (make-game (make-posn (- x 1) y) dir (cons pos (all_but_the_last_tail body)) food)])))
 
-;cant go back onto one's self...
-;(define (NO_RETREAT gs)
- ; (let*([pos (game-pos gs)]
-  ;        [dir  (game-dir gs)]
-   ;       [body (game-body gs)]
-    ;      [food (game-food gs)]
-     ;     [x (posn-x pos)]
-      ;    [y (posn-y pos)])
-    ;(cond [(and (= dir 0) (key=? key "s")) 
-
 
      ;Game Keypress -> Game=============================================================================
 (define (command gs key)
@@ -159,6 +158,14 @@
     (place-image FOOD x y img)))
 
      ;food placement
+;initial game has random posn
+
+(define (food-create p)
+  (food-check-create p (make-posn (* SCALE (+ 1 (random MAX))) (* SCALE (+ 1 (random MAX))))))
+
+(define (food-check-create p candidate)
+  (if (equal? p candidate) (food-create p) candidate))
+
 
 
 ;RENDERING THE WORM==================================================================================================================================================================================================================
